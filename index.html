@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BadmintonKu - Booking Lapangan Badminton</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #27ae60;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #27ae60;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #27ae60;
+            border: 2px solid #27ae60;
+        }
+
+        .btn-outline:hover {
+            background: #27ae60;
+            color: white;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Landing Page */
+        .hero {
+            background: linear-gradient(rgba(39, 174, 96, 0.8), rgba(39, 174, 96, 0.8)), 
+                        linear-gradient(45deg, #27ae60, #2ecc71);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .features {
+            padding: 5rem 0;
+            background: #f8f9fa;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Schedule Page */
+        .schedule-container {
+            padding: 2rem 0;
+        }
+
+        .date-filter {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            padding: 0.7rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #27ae60;
+        }
+
+        .schedule-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .schedule-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .schedule-table th {
+            background: #27ae60;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .schedule-table td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .slot {
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        .slot.available {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .slot.available:hover {
+            background: #27ae60;
+            color: white;
+        }
+
+        .slot.booked {
+            background: #f8d7da;
+            color: #721c24;
+            cursor: not-allowed;
+        }
+
+        /* Booking Form */
+        .booking-form {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .price-summary {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .total-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #27ae60;
+            border-top: 1px solid #ddd;
+            padding-top: 0.5rem;
+        }
+
+        /* Payment Page */
+        .payment-container {
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .payment-method {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .countdown {
+            background: #ff6b6b;
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .qr-code {
+            text-align: center;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        /* Login/Register */
+        .auth-container {
+            max-width: 400px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab.active {
+            background: #27ae60;
+            color: white;
+        }
+
+        .auth-tab:first-child {
+            border-radius: 10px 0 0 10px;
+        }
+
+        .auth-tab:last-child {
+            border-radius: 0 10px 10px 0;
+        }
+
+        /* History Page */
+        .history-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-paid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Admin Dashboard */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            color: #27ae60;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: #bdc3c7;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .footer-section a:hover {
+            color: #27ae60;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #34495e;
+            color: #bdc3c7;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-nav {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem;
+        }
+
+        .mobile-nav.active {
+            display: block;
+        }
+
+        .mobile-nav a {
+            display: block;
+            padding: 0.5rem 0;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .btn {
+                padding: 0.5rem 1rem;
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+
+            .schedule-table {
+                overflow-x: auto;
+            }
+
+            .history-table table {
+                min-width: 600px;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .alert-close:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <i class="fas fa-shuttlecock"></i> BadmintonKu
+            </div>
+            <ul class="nav-links">
+                <li><a onclick="showPage('home')">Beranda</a></li>
+                <li><a onclick="showPage('schedule')">Jadwal</a></li>
+                <li><a onclick="showPage('booking')">Booking</a></li>
+                <li><a onclick="showPage('history')">Riwayat</a></li>
+                <li><a onclick="showPage('admin')">Admin</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a class="btn btn-outline" onclick="showPage('auth')">Login</a>
+                <a class="btn btn-primary" onclick="showPage('booking')">Booking</a>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="mobile-nav" id="mobile-nav">
+                <a onclick="showPage('home')">Beranda</a>
+                <a onclick="showPage('schedule')">Jadwal</a>
+                <a onclick="showPage('booking')">Booking</a>
+                <a onclick="showPage('history')">Riwayat</a>
+                <a onclick="showPage('admin')">Admin</a>
+                <a onclick="showPage('auth')">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Pesan Lapangan Badminton dengan Mudah dan Cepat</h1>
+                    <p>Nikmati pengalaman bermain badminton terbaik dengan fasilitas lengkap dan pelayanan terpercaya</p>
+                    <a class="btn btn-primary" onclick="showPage('booking')">
+                        <i class="fas fa-calendar-check"></i> Booking Sekarang
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">Mengapa Memilih BadmintonKu?</h2>
+                <p class="section-subtitle">Kami menyediakan layanan terbaik untuk pengalaman bermain badminton Anda</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Booking Online 24/7</h3>
+                        <p>Pesan lapangan kapan saja, dimana saja melalui sistem online yang mudah digunakan</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-credit-card"></i>
+                        <h3>Pembayaran Digital</h3>
+                        <p>Bayar dengan mudah melalui transfer bank, QRIS, atau bayar langsung di tempat</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-star"></i>
+                        <h3>Fasilitas Lengkap</h3>
+                        <p>Lapangan berkualitas tinggi dengan perlengkapan lengkap dan area parkir luas</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Lokasi Strategis</h3>
+                        <p>Berlokasi di tempat yang mudah diakses dengan transportasi umum maupun kendaraan pribadi</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">Galeri Lapangan</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div style="height: 200px; background: linear-gradient(45deg, #27ae60, #2ecc71); border-radius: 10px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <h4>Lapangan 1</h4>
+                        <p>Lapangan dengan lighting terbaik</p>
+                    </div>
+                    <div class="feature-card">
+                        <div style="height: 200px; background: linear-gradient(45deg, #27ae60, #2ecc71); border-radius: 10px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <h4>Lapangan 2</h4>
+                        <p>Lapangan standar internasional</p>
+                    </div>
+                    <div class="feature-card">
+                        <div style="height: 200px; background: linear-gradient(45deg, #27ae60, #2ecc71); border-radius: 10px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <h4>Area Parkir</h4>
+                        <p>Parkir luas dan aman</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="features" style="background: white;">
+            <div class="container">
+                <h2 class="section-title">Testimoni Pengguna</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div style="margin-bottom: 1rem;">⭐⭐⭐⭐⭐</div>
+                        <p>"Pelayanan sangat memuaskan! Booking mudah dan lapangan berkualitas tinggi."</p>
+                        <h4 style="margin-top: 1rem; color: #27ae60;">- Andi Setiawan</h4>
+                    </div>
+                    <div class="feature-card">
+                        <div style="margin-bottom: 1rem;">⭐⭐⭐⭐⭐</div>
+                        <p>"Lokasi strategis dan fasilitas lengkap. Sangat direkomendasikan!"</p>
+                        <h4 style="margin-top: 1rem; color: #27ae60;">- Maya Putri</h4>
+                    </div>
+                    <div class="feature-card">
+                        <div style="margin-bottom: 1rem;">⭐⭐⭐⭐⭐</div>
+                        <p>"Sistem booking online sangat memudahkan. Tidak perlu antre lagi!"</p>
+                        <h4 style="margin-top: 1rem; color: #27ae60;">- Budi Santoso</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Schedule Page -->
+    <div id="schedule" class="page">
+        <div class="container schedule-container">
+            <h2 class="section-title">Jadwal Ketersediaan Lapangan</h2>
+            
+            <div class="date-filter">
+                <div class="filter-row">
+                    <div class="form-group">
+                        <label for="date-picker">Pilih Tanggal</label>
+                        <input type="date" id="date-picker">
+                    </div>
+                    <div class="form-group">
+                        <label for="court-select">Pilih Lapangan</label>
+                        <select id="court-select">
+                            <option value="all">Semua Lapangan</option>
+                            <option value="1">Lapangan 1</option>
+                            <option value="2">Lapangan 2</option>
+                            <option value="3">Lapangan 3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" onclick="loadSchedule()">
+                            <i class="fas fa-search"></i> Cari Jadwal
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="schedule-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Waktu</th>
+                            <th>Lapangan 1</th>
+                            <th>Lapangan 2</th>
+                            <th>Lapangan 3</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-tbody">
+                        <!-- Schedule will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Page -->
+    <div id="booking" class="page">
+        <div class="container">
+            <h2 class="section-title">Formulir Pemesanan</h2>
+            
+            <form class="booking-form" onsubmit="processBooking(event)">
+                <div class="form-group">
+                    <label for="customer-name">Nama Lengkap *</label>
+                    <input type="text" id="customer-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-phone">Nomor HP/WA *</label>
+                    <input type="tel" id="customer-phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-email">Email *</label>
+                    <input type="email" id="customer-email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="booking-date">Tanggal Main *</label>
+                    <input type="date" id="booking-date" required>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="start-time">Jam Mulai *</label>
+                        <select id="start-time" required onchange="calculatePrice()">
+                            <option value="">Pilih Jam</option>
+                            <option value="08:00">08:00</option>
+                            <option value="09:00">09:00</option>
+                            <option value="10:00">10:00</option>
+                            <option value="11:00">11:00</option>
+                            <option value="12:00">12:00</option>
+                            <option value="13:00">13:00</option>
+                            <option value="14:00">14:00</option>
+                            <option value="15:00">15:00</option>
+                            <option value="16:00">16:00</option>
+                            <option value="17:00">17:00</option>
+                            <option value="18:00">18:00</option>
+                            <option value="19:00">19:00</option>
+                            <option value="20:00">20:00</option>
+                            <option value="21:00">21:00</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="end-time">Jam Selesai *</label>
+                        <select id="end-time" required onchange="calculatePrice()">
+                            <option value="">Pilih Jam</option>
+                            <option value="09:00">09:00</option>
+                            <option value="10:00">10:00</option>
+                            <option value="11:00">11:00</option>
+                            <option value="12:00">12:00</option>
+                            <option value="13:00">13:00</option>
+                            <option value="14:00">14:00</option>
+                            <option value="15:00">15:00</option>
+                            <option value="16:00">16:00</option>
+                            <option value="17:00">17:00</option>
+                            <option value="18:00">18:00</option>
+                            <option value="19:00">19:00</option>
+                            <option value="20:00">20:00</option>
+                            <option value="21:00">21:00</option>
+                            <option value="22:00">22:00</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="court-booking">Pilih Lapangan *</label>
+                    <select id="court-booking" required>
+                        <option value="">Pilih Lapangan</option>
+                        <option value="1">Lapangan 1</option>
+                        <option value="2">Lapangan 2</option>
+                        <option value="3">Lapangan 3</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="payment-method">Metode Pembayaran *</label>
+                    <select id="payment-method" required>
+                        <option value="">Pilih Metode</option>
+                        <option value="transfer">Transfer Bank</option>
+                        <option value="qris">QRIS</option>
+                        <option value="cash">Bayar di Tempat</option>
+                    </select>
+                </div>
+                
+                <div class="price-summary">
+                    <h3 style="margin-bottom: 1rem; color: #27ae60;">Ringkasan Harga</h3>
+                    <div class="price-row">
+                        <span>Durasi:</span>
+                        <span id="duration">0 jam</span>
+                    </div>
+                    <div class="price-row">
+                        <span>Harga per jam:</span>
+                        <span>Rp 50.000</span>
+                    </div>
+                    <div class="price-row total-price">
+                        <span>Total:</span>
+                        <span id="total-price">Rp 0</span>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-credit-card"></i> Lanjutkan ke Pembayaran
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment Page -->
+    <div id="payment" class="page">
+        <div class="container payment-container">
+            <h2 class="section-title">Pembayaran</h2>
+            
+            <div class="countdown" id="payment-countdown">
+                Waktu tersisa untuk pembayaran: <span id="countdown-timer">15:00</span>
+            </div>
+            
+            <div class="payment-method">
+                <h3 style="margin-bottom: 1.5rem; color: #27ae60;">Detail Pembayaran</h3>
+                <div id="payment-details">
+                    <!-- Payment details will be populated by JavaScript -->
+                </div>
+                
+                <div class="qr-code" id="qr-section" style="display: none;">
+                    <h4>Scan QR Code untuk Pembayaran</h4>
+                    <div style="width: 200px; height: 200px; margin: 1rem auto; background: #f0f0f0; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-qrcode" style="font-size: 4rem; color: #ccc;"></i>
+                    </div>
+                    <p>Atau transfer ke rekening: <strong>1234567890 - Bank BCA</strong></p>
+                </div>
+                
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button class="btn btn-primary" onclick="confirmPayment()">
+                        <i class="fas fa-check"></i> Konfirmasi Pembayaran
+                    </button>
+                    <button class="btn btn-outline" onclick="showPage('booking')" style="margin-left: 1rem;">
+                        <i class="fas fa-arrow-left"></i> Kembali
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Page -->
+    <div id="history" class="page">
+        <div class="container">
+            <h2 class="section-title">Riwayat Pemesanan</h2>
+            
+            <div class="history-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No. Booking</th>
+                            <th>Tanggal</th>
+                            <th>Waktu</th>
+                            <th>Lapangan</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-tbody">
+                        <tr>
+                            <td>BDM001</td>
+                            <td>2025-08-20</td>
+                            <td>10:00 - 12:00</td>
+                            <td>Lapangan 1</td>
+                            <td>Rp 100.000</td>
+                            <td><span class="status-badge status-paid">Dibayar</span></td>
+                            <td>
+                                <button class="btn btn-outline" onclick="viewBookingDetail('BDM001')">Detail</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>BDM002</td>
+                            <td>2025-08-18</td>
+                            <td>14:00 - 16:00</td>
+                            <td>Lapangan 2</td>
+                            <td>Rp 100.000</td>
+                            <td><span class="status-badge status-pending">Menunggu</span></td>
+                            <td>
+                                <button class="btn btn-outline" onclick="viewBookingDetail('BDM002')">Detail</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Page -->
+    <div id="auth" class="page">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+                    <button class="auth-tab" onclick="switchAuthTab('register')">Daftar</button>
+                </div>
+                
+                <div id="login-form">
+                    <h3 style="margin-bottom: 1.5rem; text-align: center; color: #27ae60;">Masuk ke Akun Anda</h3>
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-sign-in-alt"></i> Masuk
+                        </button>
+                    </form>
+                </div>
+                
+                <div id="register-form" style="display: none;">
+                    <h3 style="margin-bottom: 1.5rem; text-align: center; color: #27ae60;">Buat Akun Baru</h3>
+                    <form onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label for="register-name">Nama Lengkap</label>
+                            <input type="text" id="register-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Email</label>
+                            <input type="email" id="register-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-phone">Nomor HP</label>
+                            <input type="tel" id="register-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Password</label>
+                            <input type="password" id="register-password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-confirm-password">Konfirmasi Password</label>
+                            <input type="password" id="register-confirm-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-user-plus"></i> Daftar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Page -->
+    <div id="admin" class="page">
+        <div class="container">
+            <h2 class="section-title">Dashboard Admin</h2>
+            
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <h3>45</h3>
+                    <p>Booking Hari Ini</p>
+                </div>
+                <div class="stat-card">
+                    <h3>1,250</h3>
+                    <p>Total Booking Bulan Ini</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Rp 2.5M</h3>
+                    <p>Pendapatan Bulan Ini</p>
+                </div>
+                <div class="stat-card">
+                    <h3>3</h3>
+                    <p>Lapangan Aktif</p>
+                </div>
+            </div>
+            
+            <div class="history-table">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8f9fa;">
+                    <h3>Booking Terbaru</h3>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Tambah Booking
+                    </button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Pelanggan</th>
+                            <th>Tanggal</th>
+                            <th>Waktu</th>
+                            <th>Lapangan</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>BDM005</td>
+                            <td>John Doe</td>
+                            <td>2025-08-16</td>
+                            <td>16:00 - 18:00</td>
+                            <td>Lapangan 1</td>
+                            <td>Rp 100.000</td>
+                            <td><span class="status-badge status-paid">Dibayar</span></td>
+                            <td>
+                                <button class="btn btn-outline" style="padding: 0.3rem 0.8rem; margin-right: 0.5rem;">Edit</button>
+                                <button class="btn" style="background: #dc3545; color: white; padding: 0.3rem 0.8rem;">Hapus</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>BDM004</td>
+                            <td>Jane Smith</td>
+                            <td>2025-08-16</td>
+                            <td>14:00 - 15:00</td>
+                            <td>Lapangan 2</td>
+                            <td>Rp 50.000</td>
+                            <td><span class="status-badge status-pending">Menunggu</span></td>
+                            <td>
+                                <button class="btn btn-outline" style="padding: 0.3rem 0.8rem; margin-right: 0.5rem;">Edit</button>
+                                <button class="btn" style="background: #dc3545; color: white; padding: 0.3rem 0.8rem;">Hapus</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-shuttlecock"></i> BadmintonKu</h3>
+                    <p>Platform booking lapangan badminton terpercaya dengan pelayanan terbaik untuk pengalaman bermain yang tak terlupakan.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a onclick="showPage('home')">Beranda</a>
+                    <a onclick="showPage('schedule')">Jadwal</a>
+                    <a onclick="showPage('booking')">Booking</a>
+                    <a onclick="showPage('history')">Riwayat</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Kontak</h3>
+                    <p><i class="fas fa-phone"></i> +62 812-3456-7890</p>
+                    <p><i class="fas fa-envelope"></i> info@badmintonku.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Jl. Badminton No. 123, Jakarta</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Jam Operasional</h3>
+                    <p>Senin - Jumat: 08:00 - 22:00</p>
+                    <p>Sabtu - Minggu: 07:00 - 23:00</p>
+                    <p>Booking Online: 24/7</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 BadmintonKu. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation functions
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Close mobile menu if open
+            document.getElementById('mobile-nav').classList.remove('active');
+            
+            // Initialize page-specific content
+            if (pageId === 'schedule') {
+                initSchedule();
+            } else if (pageId === 'booking') {
+                initBooking();
+            }
+        }
+
+        function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobile-nav');
+            mobileNav.classList.toggle('active');
+        }
+
+        // Schedule functions
+        function initSchedule() {
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date-picker').value = today;
+            loadSchedule();
+        }
+
+        function loadSchedule() {
+            const tbody = document.getElementById('schedule-tbody');
+            const times = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
+            
+            tbody.innerHTML = '';
+            
+            times.forEach(time => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${time} - ${(parseInt(time) + 1).toString().padStart(2, '0')}:00</strong></td>
+                    <td><button class="slot ${Math.random() > 0.3 ? 'available' : 'booked'}" onclick="selectSlot(1, '${time}')">${Math.random() > 0.3 ? 'Tersedia' : 'Terboking'}</button></td>
+                    <td><button class="slot ${Math.random() > 0.3 ? 'available' : 'booked'}" onclick="selectSlot(2, '${time}')">${Math.random() > 0.3 ? 'Tersedia' : 'Terboking'}</button></td>
+                    <td><button class="slot ${Math.random() > 0.3 ? 'available' : 'booked'}" onclick="selectSlot(3, '${time}')">${Math.random() > 0.3 ? 'Tersedia' : 'Terboking'}</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function selectSlot(court, time) {
+            if (event.target.classList.contains('booked')) {
+                showAlert('Slot ini sudah terboking!', 'danger');
+                return;
+            }
+            
+            // Navigate to booking page and pre-fill data
+            showPage('booking');
+            document.getElementById('court-booking').value = court;
+            document.getElementById('start-time').value = time;
+            document.getElementById('booking-date').value = document.getElementById('date-picker').value;
+            
+            showAlert('Slot dipilih! Silakan lengkapi form booking.', 'success');
+        }
+
+        // Booking functions
+        function initBooking() {
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('booking-date').value = today;
+            document.getElementById('booking-date').min = today;
+        }
+
+        function calculatePrice() {
+            const startTime = document.getElementById('start-time').value;
+            const endTime = document.getElementById('end-time').value;
+            
+            if (startTime && endTime) {
+                const start = parseInt(startTime.split(':')[0]);
+                const end = parseInt(endTime.split(':')[0]);
+                
+                if (end <= start) {
+                    showAlert('Jam selesai harus lebih besar dari jam mulai!', 'danger');
+                    document.getElementById('end-time').value = '';
+                    return;
+                }
+                
+                const duration = end - start;
+                const pricePerHour = 50000;
+                const total = duration * pricePerHour;
+                
+                document.getElementById('duration').textContent = `${duration} jam`;
+                document.getElementById('total-price').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+            }
+        }
+
+        function processBooking(event) {
+            event.preventDefault();
+            
+            // Collect form data
+            const bookingData = {
+                name: document.getElementById('customer-name').value,
+                phone: document.getElementById('customer-phone').value,
+                email: document.getElementById('customer-email').value,
+                date: document.getElementById('booking-date').value,
+                startTime: document.getElementById('start-time').value,
+                endTime: document.getElementById('end-time').value,
+                court: document.getElementById('court-booking').value,
+                paymentMethod: document.getElementById('payment-method').value,
+                total: document.getElementById('total-price').textContent
+            };
+            
+            // Store booking data (in real app, send to server)
+            localStorage.setItem('currentBooking', JSON.stringify(bookingData));
+            
+            // Navigate to payment page
+            showPaymentPage(bookingData);
+        }
+
+        function showPaymentPage(bookingData) {
+            showPage('payment');
+            
+            const paymentDetails = document.getElementById('payment-details');
+            paymentDetails.innerHTML = `
+                <div class="price-row">
+                    <strong>Nama:</strong>
+                    <span>${bookingData.name}</span>
+                </div>
+                <div class="price-row">
+                    <strong>Tanggal:</strong>
+                    <span>${bookingData.date}</span>
+                </div>
+                <div class="price-row">
+                    <strong>Waktu:</strong>
+                    <span>${bookingData.startTime} - ${bookingData.endTime}</span>
+                </div>
+                <div class="price-row">
+                    <strong>Lapangan:</strong>
+                    <span>Lapangan ${bookingData.court}</span>
+                </div>
+                <div class="price-row" style="border-top: 1px solid #ddd; padding-top: 1rem; margin-top: 1rem;">
+                    <strong>Total Bayar:</strong>
+                    <strong style="color: #27ae60; font-size: 1.2rem;">${bookingData.total}</strong>
+                </div>
+            `;
+            
+            if (bookingData.paymentMethod === 'qris' || bookingData.paymentMethod === 'transfer') {
+                document.getElementById('qr-section').style.display = 'block';
+            }
+            
+            startPaymentCountdown();
+        }
+
+        function startPaymentCountdown() {
+            let timeLeft = 15 * 60; // 15 minutes in seconds
+            
+            const countdownInterval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                document.getElementById('countdown-timer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    showAlert('Waktu pembayaran habis! Silakan booking ulang.', 'danger');
+                    showPage('booking');
+                }
+                
+                timeLeft--;
+            }, 1000);
+        }
+
+        function confirmPayment() {
+            const bookingData = JSON.parse(localStorage.getItem('currentBooking'));
+            
+            // Generate booking ID
+            const bookingId = 'BDM' + Date.now().toString().slice(-6);
+            
+            // Add to history (in real app, save to database)
+            const history = JSON.parse(localStorage.getItem('bookingHistory') || '[]');
+            history.unshift({
+                ...bookingData,
+                id: bookingId,
+                status: 'paid',
+                createdAt: new Date().toISOString()
+            });
+            localStorage.setItem('bookingHistory', JSON.stringify(history));
+            
+            showAlert(`Pembayaran berhasil! Booking ID: ${bookingId}`, 'success');
+            showPage('history');
+            loadHistory();
+        }
+
+        // Auth functions
+        function switchAuthTab(tab) {
+            const tabs = document.querySelectorAll('.auth-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'login') {
+                document.getElementById('login-form').style.display = 'block';
+                document.getElementById('register-form').style.display = 'none';
+            } else {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('register-form').style.display = 'block';
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Simple validation (in real app, authenticate with server)
+            if (email && password) {
+                showAlert('Login berhasil!', 'success');
+                showPage('home');
+            } else {
+                showAlert('Email dan password harus diisi!', 'danger');
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            
+            if (password !== confirmPassword) {
+                showAlert('Konfirmasi password tidak cocok!', 'danger');
+                return;
+            }
+            
+            showAlert('Registrasi berhasil! Silakan login.', 'success');
+            switchAuthTab('login');
+        }
+
+        // History functions
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('bookingHistory') || '[]');
+            const tbody = document.getElementById('history-tbody');
+            
+            if (history.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">Belum ada riwayat booking</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = history.map(booking => `
+                <tr>
+                    <td>${booking.id}</td>
+                    <td>${booking.date}</td>
+                    <td>${booking.startTime} - ${booking.endTime}</td>
+                    <td>Lapangan ${booking.court}</td>
+                    <td>${booking.total}</td>
+                    <td><span class="status-badge status-${booking.status}">${booking.status === 'paid' ? 'Dibayar' : 'Menunggu'}</span></td>
+                    <td><button class="btn btn-outline" onclick="viewBookingDetail('${booking.id}')">Detail</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function viewBookingDetail(bookingId) {
+            showAlert(`Menampilkan detail booking ${bookingId}`, 'success');
+        }
+
+        // Utility functions
+        function showAlert(message, type = 'success') {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = `
+                ${message}
+                <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+            `;
+            
+            document.body.insertBefore(alert, document.body.firstChild);
+            
+            setTimeout(() => {
+                if (alert.parentElement) {
+                    alert.remove();
+                }
+            }, 5000);
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date for date inputs
+            const today = new Date().toISOString().split('T')[0];
+            const dateInputs = document.querySelectorAll('input[type="date"]');
+            dateInputs.forEach(input => {
+                input.min = today;
+                if (!input.value) {
+                    input.value = today;
+                }
+            });
+            
+            // Load history on page load
+            loadHistory();
+        });
+    </script>
+</body>
+</html>
